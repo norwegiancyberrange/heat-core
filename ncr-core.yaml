@@ -1,0 +1,94 @@
+heat_template_version: 2018-08-31
+
+description: >
+  Deploy base infrastructure for the NCR core platform.
+  A lot of this structure is stolen (with permission) from Erik Hjelmås,
+  and his IaC course at NTNU.
+  Thanks Erik <3
+
+parameters:
+  key_name:
+    type: string
+    description: SSH key for all servers
+  ipv6_subnetpool:
+    type: string
+    description: ID for default IPv6 subnet pool
+  os_image:
+    type: string
+    description: Default OS for all servers
+    default: Ubuntu Server 20.04 LTS (Focal Fossa) amd64
+  public_net:
+    type: string
+    description: ID or name of external net for router
+  puppet_flavor:
+    type: string
+    description: Flavor for puppetmaster/puppetdb
+    default: m1.medium
+  postgres_flavor:
+    type: string
+    description: Flavor for postgres
+    default: m1.small
+  rabbitmq_flavor:
+    type: string
+    description: Flavor for rabbitmq
+    default: m1.small
+  docker_flavor:
+    type: string
+    description: Flavor for dockerhost
+    default: m1.large
+
+resources:
+# Network stuff
+  core_net:
+    type: OS::Neutron::Net
+    properties:
+      name: NCR-Core-Net
+
+  core_subnet_v4:
+    type: OS::Neutron::Subnet
+    properties:
+      name: NCR-Core-v4
+      network: { get_resource: core_net }
+      cidr: 192.168.0.0/24
+      gateway_ip: 192.168.0.1
+
+  core_subnet_v6:
+    type: OS::Neutron::Subnet
+    properties:
+      name: NCR-Core-v6
+      network: { get_resource: core_net }
+      ip_version: 6
+      ipv6_address_mode: slaac
+      ipv6_ra_mode: slaac
+      subnetpool: { get_param: ipv6_subnetpool }
+
+  core_router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info:
+        network: { get_param: public_net }
+
+  core_router_interface_v4:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: core_router }
+      subnet_id: { get_resource: core_subnet_v4 }
+
+  core_router_interface_v6:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: core_router }
+      subnet_id: { get_resource: core_subnet_v6 }
+
+# Servers
+  puppet:
+    type: OS::Nova::Server
+    properties:
+      name: puppet
+      image: { get_param: os_image }
+      flavor: { get_param: puppet_flavor }
+      key_name: { get_param: key_name }
+      networks:
+        - network: { get_resource: core_net }
+      security_groups: [ 'default' ]
+
