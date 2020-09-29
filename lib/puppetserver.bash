@@ -48,6 +48,32 @@ EOF
 $puppet apply /var/tmp/r10k.pp
 r10k deploy environment -p
 
+# Do some hiera-conf
+cat <<EOF > /etc/puppetlabs/puppet/hiera.yaml
+---
+# Hiera 5 Global configuration file
+
+version: 5
+
+defaults:
+  datadir: data
+  data_hash: yaml_data
+
+hierarchy:
+ - name: "Per-Node data"
+   path: "nodes/%{trusted.certname}.yaml"
+ - name: "Global data"
+   glob: "*.yaml"
+EOF
+
+mkdir -p /etc/puppetlabs/puppet/data/nodes
+ln -s /etc/puppetlabs/puppet/data /root/hieradata
+
+cat <<EOF > /etc/puppetlabs/puppet/data/common.yaml
+---
+classes: []
+EOF
+
 # Start puppet services
 $puppet resource service puppetserver ensure=running enable=true
 $puppet agent --test --waitforcert 10
