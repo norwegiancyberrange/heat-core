@@ -9,7 +9,7 @@ dpkg -i "$tempdeb"
 
 # Update and install puppetserver
 apt update && apt -y upgrade
-apt install puppetserver
+apt install -y puppetserver
 
 $puppet='/opt/puppetlabs/bin/puppet'
 $puppetsrv='/opt/puppetlabs/bin/puppetserver'
