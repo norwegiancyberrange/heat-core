@@ -46,13 +46,27 @@ resources:
   ncr-core:
     type: ncr-core.yaml
     properties:
-      key_name: { get_param: key_name }
-      os_image: { get_param: os_image }
+      key_name:      { get_param: key_name }
+      os_image:      { get_param: os_image }
       puppet_flavor: { get_param: puppet_flavor }
-      core_net: { get_resource: core_net }
+      core_net:      { get_resource: core_net }
       core_net_name: { get_param: core_net_name }
+      public_net:    { get_param: public_net }
+      domain:        { get_param: domain }
+      sec_groups:
+        - default
+        - { get_resource: sg_linux_v4 }
+        - { get_resource: sg_linux_v6 }
+
+  ncr-servers:
+    type: ncr-servers.yaml
+    depends_on: ncr-core
+    properties:
+      key_name:   { get_param: key_name }
+      os_image:   { get_param: os_image }
+      core_net:   { get_resource: core_net }
       public_net: { get_param: public_net }
-      domain: { get_param: domain }
+      domain:     { get_param: domain }
       sec_groups:
         - default
         - { get_resource: sg_linux_v4 }

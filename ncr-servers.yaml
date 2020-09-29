@@ -6,9 +6,6 @@ description: >
   takes care of the remaining config.
 
 parameters:
-  core_net_name:
-    type: string
-    description: Name for core network
   core_net:
     type: string
     description: Core network ID
