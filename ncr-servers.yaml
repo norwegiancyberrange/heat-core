@@ -1,0 +1,70 @@
+heat_template_version: 2018-08-31
+
+description: >
+  HOT template that creates servers for the rest of the
+  basic NCR core infrastructure. Installs puppet, which
+  takes care of the remaining config.
+
+parameters:
+  core_net_name:
+    type: string
+    description: Name for core network
+  core_net:
+    type: string
+    description: Core network ID
+  domain:
+    type: string
+    description: Domain name for the deployed environment
+  key_name:
+    type: string
+    description: SSH key for all servers
+  os_image:
+    type: string
+    description: Default OS for all servers
+    default: Ubuntu Server 20.04 LTS (Focal Fossa) amd64
+  public_net:
+    type: string
+    description: ID or name of external net for router
+  sec_groups:
+    type: comma_delimited_list
+    description: Security Groups
+
+resources:
+  postgres:
+    type: lib/linux-server.yaml
+    properties:
+      server_name: postgres
+      flavor:      m1.small
+      ip:          192.168.0.12
+      image:       { get_param: os_image }
+      key_name:    { get_param: key_name }
+      core_net:    { get_param: core_net }
+      sec_groups:  { get_param: sec_groups }
+      domain:      { get_param: domain }
+      public_net:  { get_param: public_net }
+
+  rabbitmq:
+    type: lib/linux-server.yaml
+    properties:
+      server_name: rabbitmq
+      flavor:      m1.small
+      ip:          192.168.0.13
+      image:       { get_param: os_image }
+      key_name:    { get_param: key_name }
+      core_net:    { get_param: core_net }
+      sec_groups:  { get_param: sec_groups }
+      domain:      { get_param: domain }
+      public_net:  { get_param: public_net }
+
+  docker:
+    type: lib/linux-server.yaml
+    properties:
+      server_name: docker
+      flavor:      m1.large
+      ip:          192.168.0.14
+      image:       { get_param: os_image }
+      key_name:    { get_param: key_name }
+      core_net:    { get_param: core_net }
+      sec_groups:  { get_param: sec_groups }
+      domain:      { get_param: domain }
+      public_net:  { get_param: public_net }
