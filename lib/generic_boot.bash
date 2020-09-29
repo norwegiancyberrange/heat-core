@@ -20,6 +20,6 @@ echo "127.0.1.1 $(hostname).$DOMAIN $(hostname)" >> /etc/hosts
 
 # Configure puppet agent
 puppet='/opt/puppetlabs/bin/puppet'
-$puppet config set server $PUPPETSERVER --section main
+$puppet config set server "$PUPPETSERVER.$DOMAIN" --section main
 $puppet config set runinterval 600 --section main
 $puppet resource service puppet ensure=running enable=true
