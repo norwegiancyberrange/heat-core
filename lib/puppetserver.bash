@@ -17,10 +17,10 @@ $puppet resource service puppet ensure=stopped enable=true
 $puppet resource service puppetserver ensure=stopped enable=true
 
 # Set FQDN
-echo "127.0.1.1 $(hostname).@@DOMAIN@@ $(hostname)" >> /etc/hosts
+echo "127.0.1.1 $(hostname).<%DOMAIN%> $(hostname)" >> /etc/hosts
 
 # Puppet conf
-$puppet config set server "@@PUPPETSERVER@@.@@DOMAIN@@" --section main
+$puppet config set server "<%PUPPETSERVER%>.<%DOMAIN%>" --section main
 $puppet config set runinterval 600 --section main
 
 # Auto-sign

@@ -158,10 +158,10 @@ resources:
       user_data_format: RAW
       user_data:
         str_replace:
-          template: { get_file: lib/puppetserver.sh }
+          template: { get_file: lib/puppetserver.bash }
           params:
-            @@PUPPETSERVER@@: puppet
-            @@DOMAIN@@: { get_param: domain }
+            <%PUPPETSERVER%>: puppet
+            <%DOMAIN%>: { get_param: domain }
 
   puppet_fip:
     type: OS::Neutron::FloatingIP
