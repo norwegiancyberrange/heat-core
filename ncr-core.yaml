@@ -11,6 +11,10 @@ parameters:
     type: comma_delimited_list
     label: admin_networks
     description: A list of IPv4 networks that will be allowed SSH access
+  admin_networks_v6:
+    type: comma_delimited_list
+    label: admin_networks
+    description: A list of IPv6 networks that will be allowed SSH access
   core_net_name:
     type: string
     description: Name for core network
@@ -92,7 +96,7 @@ resources:
       subnet_id: { get_resource: core_subnet_v6 }
 
 # Security Groups
-  sg_linux:
+  sg_linux_v4:
     type: OS::Neutron::SecurityGroup
     properties:
       description: Common rules for Linux servers
@@ -106,6 +110,36 @@ resources:
             port_range_max: 22
             remote_ip_prefix: <%net%>
 
+  sg_linux_v6:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: Common rules for Linux servers
+      rules:
+        repeat:
+          for_each:
+            <%net%>: { get_param: admin_networks_v6 }
+          template:
+            protocol: tcp
+            ethertype: IPv6
+            port_range_min: 22
+            port_range_max: 22
+            remote_ip_prefix: <%net%>
+
+  sg_linux_in4_icmp:
+    type: OS::Neutron::SecurityGroupRule
+    properties:
+      security_group: { get_resource: sg_linux_v4 }
+      protocol: icmp
+      remote_ip_prefix: 0.0.0.0/0
+
+  sg_linux_in6_icmp:
+    type: OS::Neutron::SecurityGroupRule
+    properties:
+      security_group: { get_resource: sg_linux_v6 }
+      ethertype: IPv6
+      protocol: icmpv6
+      remote_ip_prefix: ::/0
+
 # Servers
   puppet:
     type: OS::Nova::Server
@@ -117,7 +151,7 @@ resources:
       networks:
         - network: { get_resource: core_net }
           fixed_ip: 192.168.0.10
-      security_groups: [ 'default' , { get_resource: sg_linux } ]
+      security_groups: [ 'default' , { get_resource: sg_linux_v4 }, { get_resource: sg_linux_v6 } ]
 
   puppet_fip:
     type: OS::Neutron::FloatingIP
