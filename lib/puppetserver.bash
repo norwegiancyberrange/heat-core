@@ -2,6 +2,10 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
+# These will be replace by openstack heat magic
+DOMAIN='<%DOMAIN%>'
+PUPPETSERVER='<%PUPPETSERVER%>'
+
 # Download deb for puppet repo
 tempdeb=$(mktemp /tmp/puppet.XXXXXX.deb) || exit 1
 wget https://apt.puppetlabs.com/puppet6-release-focal.deb -O "$tempdeb"
@@ -17,10 +21,10 @@ $puppet resource service puppet ensure=stopped enable=true
 $puppet resource service puppetserver ensure=stopped enable=true
 
 # Set FQDN
-echo "127.0.1.1 $(hostname).<%DOMAIN%> $(hostname)" >> /etc/hosts
+echo "127.0.1.1 $(hostname).$DOMAIN $(hostname)" >> /etc/hosts
 
 # Puppet conf
-$puppet config set server "<%PUPPETSERVER%>.<%DOMAIN%>" --section main
+$puppet config set server "$PUPPETSERVER.$DOMAIN" --section main
 $puppet config set runinterval 600 --section main
 
 # Auto-sign
