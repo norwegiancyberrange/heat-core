@@ -1,0 +1,61 @@
+heat_template_version: 2018-08-31
+
+description: >
+  HOT template for a generic Linux server managed by our puppetserver
+
+parameters:
+  server_name:
+    type: string
+    description: Name of the Linux Server
+  image:
+    type: string
+    description: Image to use
+    default: Ubuntu Server 20.04 LTS (Focal Fossa) amd64
+  flavor:
+    type: string
+    description: Flavor for server
+  key_name:
+    type: string
+    description: Default SSH key
+  core_net:
+    type: string
+    description: Name or ID for core network
+  ip:
+    type: string
+    description: Fixed IP
+  sec_groups:
+    type: comma_delimited_list
+    description: List of default security groups
+  domain:
+    type: string
+    description: Domain of the platform
+  public_net:
+    type: string
+    description: Name or ID of the floating IP pool
+
+
+resources:
+  server:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: server_name }
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+      key_name: { get_param: key_name }
+      networks:
+        - network: { get_param: core_net }
+          fixed_ip: { get_param: ip }
+      security_groups: { get_param: sec_groups }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          template: { get_file: generic_boot.bash }
+          params:
+            <%PUPPETSERVER%>: puppet
+            <%DOMAIN%>: { get_param: domain }
+
+  server_fip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: public_net }
+      port_id: { get_attr: [ server, addresses, get_param: core_net, 0, port ] }
