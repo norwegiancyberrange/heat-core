@@ -160,8 +160,8 @@ resources:
         str_replace:
           template: { get_file: lib/puppetserver.sh }
           params:
-            %%PUPPETSERVER%%: puppet
-            %%DOMAIN%%: { get_param: domain }
+            @@PUPPETSERVER@@: puppet
+            @@DOMAIN@@: { get_param: domain }
 
   puppet_fip:
     type: OS::Neutron::FloatingIP
