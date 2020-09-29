@@ -28,7 +28,7 @@ parameters:
     description: Flavor for puppetmaster/puppetdb
   sec_groups:
     type: comma_delimited_list
-    description: Security Groups
+    description: Default security groups
 
 resources:
   puppet:
@@ -41,7 +41,7 @@ resources:
       networks:
         - network: { get_param: core_net }
           fixed_ip: 192.168.0.10
-      security_groups: { get_param: sec_groups }
+      security_groups: { get_param: sec_groups }
       user_data_format: RAW
       user_data:
         str_replace:

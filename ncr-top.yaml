@@ -50,7 +50,9 @@ resources:
       os_image: { get_param: os_image }
       puppet_flavor: { get_param: puppet_flavor }
       core_net: { get_resource: core_net }
-      public_net: { get_param: public_net }
+      core_net_name: { get_param: core_net_name }
+      public_net: { get_param: public_net }
+      domain: { get_param: domain }
       sec_groups:
         - default
         - { get_resource: sg_linux_v4 }
