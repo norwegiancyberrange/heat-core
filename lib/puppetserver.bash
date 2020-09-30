@@ -75,7 +75,8 @@ cat <<EOF > /etc/puppetlabs/puppet/data/common.yaml
 ---
 profile::puppet::environment: '$ENVIRONMENT'
 profile::puppet::hostname: '$PUPPETSERVER.$DOMAIN'
-profile::networking::searchdomain: '$DOMAIN'
+profile::dns::nameservers: '129.241.0.200 129.241.0.201'
+profile::dns::searchdomain: '$DOMAIN'
 profile::ntp::servers:
   - 'ntp.justervesenet.no'
   - 'ntp.se'
