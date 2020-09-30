@@ -71,7 +71,7 @@ ln -s /etc/puppetlabs/puppet/data /root/hieradata
 
 cat <<EOF > /etc/puppetlabs/puppet/data/common.yaml
 ---
-classes: []
+profile::networking::searchdomain: $DOMAIN
 EOF
 
 # Start puppet services
