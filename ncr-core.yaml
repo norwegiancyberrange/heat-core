@@ -29,6 +29,9 @@ parameters:
   sec_groups:
     type: comma_delimited_list
     description: Default security groups
+  environment:
+    type: string
+    description: Specify (puppet) envrionment. Typically production or test
 
 resources:
   puppet:
@@ -49,6 +52,7 @@ resources:
           params:
             <%PUPPETSERVER%>: puppet
             <%DOMAIN%>: { get_param: domain }
+            <%ENVIRONMENT%>: { get_param: environment }
 
   puppet_fip:
     type: OS::Neutron::FloatingIP

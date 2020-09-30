@@ -5,6 +5,7 @@ export DEBIAN_FRONTEND=noninteractive
 # These will be replace by openstack heat magic
 DOMAIN='<%DOMAIN%>'
 PUPPETSERVER='<%PUPPETSERVER%>'
+ENVIRONMENT='<%ENVIRONMENT%>'
 
 # Download deb for puppet repo
 tempdeb=$(mktemp /tmp/puppet.XXXXXX.deb) || exit 1
@@ -26,6 +27,7 @@ echo "127.0.1.1 $(hostname).$DOMAIN $(hostname)" >> /etc/hosts
 # Puppet conf
 $puppet config set server "$PUPPETSERVER.$DOMAIN" --section main
 $puppet config set runinterval 600 --section main
+$puppet config set environment $ENVIRONMENT --section agent
 
 # Auto-sign
 $puppet config set autosign true --section master
@@ -71,6 +73,8 @@ ln -s /etc/puppetlabs/puppet/data /root/hieradata
 
 cat <<EOF > /etc/puppetlabs/puppet/data/common.yaml
 ---
+profile::puppet::environment: '$ENVIRONMENT'
+profile::puppet::hostname: '$PUPPETSERVER.$DOMAIN'
 profile::networking::searchdomain: '$DOMAIN'
 profile::ntp::servers:
   - 'ntp.justervesenet.no'

@@ -32,7 +32,9 @@ parameters:
   public_net:
     type: string
     description: Name or ID of the floating IP pool
-
+  environment:
+    type: string
+    description: Specify (puppet) envrionment. Typically production or test
 
 resources:
   server:
@@ -53,6 +55,7 @@ resources:
           params:
             <%PUPPETSERVER%>: puppet
             <%DOMAIN%>: { get_param: domain }
+            <%ENVIRONMENT%>: { get_param: environment }
 
   server_fip:
     type: OS::Neutron::FloatingIP

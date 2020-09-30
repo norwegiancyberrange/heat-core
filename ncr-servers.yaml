@@ -25,6 +25,9 @@ parameters:
   sec_groups:
     type: comma_delimited_list
     description: Security Groups
+  environment:
+    type: string
+    description: Specify (puppet) envrionment. Typically production or test
 
 resources:
   postgres:
@@ -39,6 +42,7 @@ resources:
       sec_groups:  { get_param: sec_groups }
       domain:      { get_param: domain }
       public_net:  { get_param: public_net }
+      environment: { get_param: environment }
 
   rabbitmq:
     type: lib/linux-server.yaml
@@ -52,6 +56,7 @@ resources:
       sec_groups:  { get_param: sec_groups }
       domain:      { get_param: domain }
       public_net:  { get_param: public_net }
+      environment: { get_param: environment }
 
   docker:
     type: lib/linux-server.yaml
@@ -65,3 +70,4 @@ resources:
       sec_groups:  { get_param: sec_groups }
       domain:      { get_param: domain }
       public_net:  { get_param: public_net }
+      environment: { get_param: environment }

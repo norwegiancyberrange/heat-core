@@ -40,6 +40,10 @@ parameters:
     type: string
     description: Flavor for puppetmaster/puppetdb
     default: m1.medium
+  environment:
+    type: string
+    description: Specify (puppet) envrionment. Typically production or test
+    default: production
 
 resources:
 
@@ -53,6 +57,7 @@ resources:
       core_net_name: { get_param: core_net_name }
       public_net:    { get_param: public_net }
       domain:        { get_param: domain }
+      environment:   { get_param: environment }
       sec_groups:
         - default
         - { get_resource: sg_linux_v4 }
@@ -62,11 +67,12 @@ resources:
     type: ncr-servers.yaml
     depends_on: ncr-core
     properties:
-      key_name:   { get_param: key_name }
-      os_image:   { get_param: os_image }
-      core_net:   { get_resource: core_net }
-      public_net: { get_param: public_net }
-      domain:     { get_param: domain }
+      key_name:    { get_param: key_name }
+      os_image:    { get_param: os_image }
+      core_net:    { get_resource: core_net }
+      public_net:  { get_param: public_net }
+      domain:      { get_param: domain }
+      environment: { get_param: environment }
       sec_groups:
         - default
         - { get_resource: sg_linux_v4 }
