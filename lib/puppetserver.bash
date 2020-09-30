@@ -71,7 +71,36 @@ ln -s /etc/puppetlabs/puppet/data /root/hieradata
 
 cat <<EOF > /etc/puppetlabs/puppet/data/common.yaml
 ---
-profile::networking::searchdomain: $DOMAIN
+profile::networking::searchdomain: '$DOMAIN'
+profile::ntp::servers:
+  - 'ntp.justervesenet.no'
+  - 'ntp.se'
+  - 'ntp.ntnu.no'
+EOF
+
+cat <<EOF > /etc/puppetlabs/puppet/data/packages.yaml
+profile::baseconfig::packages:
+ - 'apt-transport-https'
+ - 'atop'
+ - 'bc'
+ - 'build-essential'
+ - 'curl'
+ - 'fio'
+ - 'git'
+ - 'gdisk'
+ - 'htop'
+ - 'iotop'
+ - 'iperf3'
+ - 'jq'
+ - 'locate'
+ - 'man-db'
+ - 'ncdu'
+ - 'pwgen'
+ - 'screen'
+ - 'software-properties-common'
+ - 'sysstat'
+ - 'tcpdump'
+ - 'vim'
 EOF
 
 # Start puppet services
