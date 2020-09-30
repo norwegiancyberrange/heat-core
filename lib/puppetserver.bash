@@ -79,6 +79,7 @@ profile::ntp::servers:
 EOF
 
 cat <<EOF > /etc/puppetlabs/puppet/data/packages.yaml
+---
 profile::baseconfig::packages:
  - 'apt-transport-https'
  - 'atop'
