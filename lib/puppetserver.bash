@@ -76,6 +76,7 @@ cat <<EOF > /etc/puppetlabs/puppet/data/common.yaml
 profile::puppet::environment: '$ENVIRONMENT'
 profile::puppet::hostname: '$PUPPETSERVER.$DOMAIN'
 profile::postgres::password: '$(pwgen 32 1)'
+profile::rabbitmq::password: '$(pwgen 32 1)'
 profile::dns::nameservers: '129.241.0.200 129.241.0.201'
 profile::dns::searchdomain: '$DOMAIN'
 profile::ntp::servers:
