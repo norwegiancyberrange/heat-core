@@ -2,7 +2,7 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-# These will be replace by openstack heat magic
+# These will be replaced by openstack heat magic
 DOMAIN='<%DOMAIN%>'
 PUPPETSERVER='<%PUPPETSERVER%>'
 ENVIRONMENT='<%ENVIRONMENT%>'
@@ -14,7 +14,7 @@ dpkg -i "$tempdeb"
 
 # Update and install puppetserver
 apt update && apt -y upgrade
-apt install -y puppetserver
+apt install -y puppetserver pwgen
 
 puppet='/opt/puppetlabs/bin/puppet'
 puppetsrv='/opt/puppetlabs/bin/puppetserver'
@@ -75,6 +75,7 @@ cat <<EOF > /etc/puppetlabs/puppet/data/common.yaml
 ---
 profile::puppet::environment: '$ENVIRONMENT'
 profile::puppet::hostname: '$PUPPETSERVER.$DOMAIN'
+profile::postgres::password: '$(pwgen 32 1)'
 profile::dns::nameservers: '129.241.0.200 129.241.0.201'
 profile::dns::searchdomain: '$DOMAIN'
 profile::ntp::servers:
