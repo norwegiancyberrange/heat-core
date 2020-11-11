@@ -4,6 +4,8 @@ export DEBIAN_FRONTEND=noninteractive
 
 # These will be replaced by openstack heat magic
 DOMAIN='<%DOMAIN%>'
+PSQLSERVER='<%PSQLSERVER%>'
+RABBITSERVER='<%RABBITSERVER%>'
 PUPPETSERVER='<%PUPPETSERVER%>'
 ENVIRONMENT='<%ENVIRONMENT%>'
 
@@ -75,7 +77,9 @@ cat <<EOF > /etc/puppetlabs/puppet/data/common.yaml
 ---
 profile::puppet::environment: '$ENVIRONMENT'
 profile::puppet::hostname: '$PUPPETSERVER.$DOMAIN'
+profile::postgres::host: '$PSQLSERVER.$DOMAIN'
 profile::postgres::password: '$(pwgen 32 1)'
+profike::rabbitmq::host: '$RABBITSERVER.$DOMAIN'
 profile::rabbitmq::password: '$(pwgen 32 1)'
 profile::dns::nameservers: '129.241.0.200 129.241.0.201'
 profile::dns::searchdomain: '$DOMAIN'

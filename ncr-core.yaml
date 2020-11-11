@@ -53,6 +53,8 @@ resources:
             <%PUPPETSERVER%>: puppet
             <%DOMAIN%>: { get_param: domain }
             <%ENVIRONMENT%>: { get_param: environment }
+            <%RABBITSERVER%>: rabbitmq
+            <%PSQLSERVER%>: postgres
 
   puppet_fip:
     type: OS::Neutron::FloatingIP
