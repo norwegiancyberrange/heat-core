@@ -60,5 +60,5 @@ resources:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network: { get_param: public_net }
-      port_id: { get_attr: [ puppet, addresses, get_param: core_net_name, 0, port ] }
+      port_id: { get_attr: [ puppet, addresses, get_param: core_net, 0, port ] }
 
