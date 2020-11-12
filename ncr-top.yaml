@@ -54,7 +54,6 @@ resources:
       os_image:      { get_param: os_image }
       puppet_flavor: { get_param: puppet_flavor }
       core_net:      { get_resource: core_net }
-      core_net_name: { get_param: core_net_name }
       public_net:    { get_param: public_net }
       domain:        { get_param: domain }
       environment:   { get_param: environment }
