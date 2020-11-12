@@ -71,3 +71,14 @@ resources:
       domain:      { get_param: domain }
       public_net:  { get_param: public_net }
       environment: { get_param: environment }
+
+outputs:
+  postgres_fip:
+    description: PostgreSQL IP address
+    value: { get_attr: [ postgres, floating_ip ] }
+  rabbitmq_fip:
+    description: RabbitMQ IP address
+    value: { get_attr: [ rabbitmq, floating_ip ] }
+  docker_fip:
+    description: Docker IP address
+    value: { get_attr: [ docker, floating_ip ] }

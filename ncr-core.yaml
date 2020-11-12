@@ -59,3 +59,7 @@ resources:
       floating_network: { get_param: public_net }
       port_id: { get_attr: [ puppet, addresses, get_param: core_net, 0, port ] }
 
+outputs:
+  puppet_fip:
+    description: Puppet external IP
+    value: { get_attr: [ puppet_fip, floating_ip_address ] }

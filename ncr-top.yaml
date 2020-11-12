@@ -49,6 +49,7 @@ resources:
 
   ncr-core:
     type: ncr-core.yaml
+    depends_on: core_net
     properties:
       key_name:      { get_param: key_name }
       os_image:      { get_param: os_image }
@@ -166,3 +167,17 @@ resources:
       ethertype: IPv6
       protocol: icmpv6
       remote_ip_prefix: ::/0
+
+outputs:
+  puppet_ip:
+    description: Puppet IP address
+    value: { get_attr: [ ncr-core, puppet_fip ] }
+  postgres_ip:
+    description: PostgreSQL IP address
+    value: { get_attr: [ ncr-servers, postgres_fip ] }
+  rabbitmq_ip:
+    description: RabbitMQ address
+    value: { get_attr: [ ncr-servers, rabbitmq_fip ] }
+  docker_ip:
+    description: Docker IP address
+    value: { get_attr: [ ncr-servers, docker_fip ] }
